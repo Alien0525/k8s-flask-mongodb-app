@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # MongoDB Service
+  mongodb:
+    image: mongo:5.0
+    container_name: todo-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - todo-network
+    environment:
+      - MONGO_INITDB_DATABASE=camp2016
+
+  # Flask Application Service
+  flask-app:
+    build: .
+    container_name: todo-flask-app
+    ports:
+      - "5001:5000"
+    depends_on:
+      - mongodb
+    networks:
+      - todo-network
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - FLASK_ENV=development
+    volumes:
+      - .:/app
+
+# Define named volume for MongoDB data persistence
+volumes:
+  mongodb_data:
+
+# Define network for containers to communicate
+networks:
+  todo-network:
+    driver: bridge
