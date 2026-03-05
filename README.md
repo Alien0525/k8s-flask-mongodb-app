@@ -243,7 +243,7 @@ This project demonstrates:
 - [AWS EKS Documentation](https://docs.aws.amazon.com/eks/)
 - [Flask Documentation](https://flask.palletsprojects.com/)
 
-## 👤 Author
+## Author
 
 Aman N S - Cloud Computing & Big Data Systems - Spring 2026
 
