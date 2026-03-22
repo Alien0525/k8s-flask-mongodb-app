@@ -9,6 +9,11 @@ spec:
   selector:
     matchLabels:
       app: flask-todo
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
@@ -16,7 +21,7 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: amanns0525/flask-todo-app:v1
+        image: amanns0525/flask-todo-app:v2
         ports:
         - containerPort: 5000
         env:
@@ -26,6 +31,22 @@ spec:
           value: "27017"
         - name: FLASK_ENV
           value: "production"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
 ---
 apiVersion: v1
 kind: Service
