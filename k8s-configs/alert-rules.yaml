@@ -1,0 +1,28 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: flask-app-alerts
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  groups:
+    - name: flask-app.rules
+      rules:
+        - alert: FlaskPodNotReady
+          expr: kube_pod_status_ready{namespace="default", condition="true", pod=~"flask-deployment-.*"} == 0
+          for: 30s
+          labels:
+            severity: critical
+          annotations:
+            summary: "Flask pod {{ $labels.pod }} is not ready"
+            description: "Flask pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has been not ready for more than 30 seconds."
+
+        - alert: FlaskPodRestarting
+          expr: increase(kube_pod_container_status_restarts_total{namespace="default", pod=~"flask-deployment-.*"}[5m]) > 0
+          for: 10s
+          labels:
+            severity: warning
+          annotations:
+            summary: "Flask pod {{ $labels.pod }} is restarting"
+            description: "Flask pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has restarted in the last 5 minutes."
