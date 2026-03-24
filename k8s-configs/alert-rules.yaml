@@ -10,14 +10,13 @@ spec:
     - name: flask-app.rules
       rules:
         - alert: FlaskPodNotReady
-          expr: kube_pod_status_ready{namespace="default", condition="true", pod=~"flask-deployment-.*"} == 0
+          expr: absent(kube_pod_status_ready{namespace="default", condition="true", pod=~"flask-deployment-.*"})
           for: 30s
           labels:
             severity: critical
           annotations:
-            summary: "Flask pod {{ $labels.pod }} is not ready"
-            description: "Flask pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has been not ready for more than 30 seconds."
-
+            summary: "Flask pods are down"
+            description: "No Flask pods are ready in the default namespace for more than 30 seconds."
         - alert: FlaskPodRestarting
           expr: increase(kube_pod_container_status_restarts_total{namespace="default", pod=~"flask-deployment-.*"}[5m]) > 0
           for: 10s
