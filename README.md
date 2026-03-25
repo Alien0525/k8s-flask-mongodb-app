@@ -245,8 +245,9 @@ This project demonstrates:
 
 ## Author
 
-Aman N S - Cloud Computing & Big Data Systems - Spring 2026
+Aman N S
+Sisvanthkumar S
 
 ## License
 
-This project is created for educational purposes as part of Cloud Computing Assignment 2.
+This project is created for educational purposes as part of Cloud Computing Assignment at NYU.
